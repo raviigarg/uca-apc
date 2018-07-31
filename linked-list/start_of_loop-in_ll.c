@@ -34,7 +34,7 @@ void create_loop(node** head) {
         cursor1 = cursor1->next;
     }
 
-    for(int i=0; i<2; i++) {
+    for(int i = 0; i < 2; i++) {
         cursor2 = cursor2->next;
     }
     cursor1->next = cursor2;
@@ -62,6 +62,26 @@ void print_list(node* head){
     }
 }
 
+int find_start(node* head) {
+    node* slow = head, *fast = head;
+    while(fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if(fast==slow) {
+            break;
+        }
+    }
+    slow = head;
+    while(fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next;
+        if(fast==slow) {
+            break;
+        }
+    }
+    return fast->data;
+}
+
 int main(){
      node* head = NULL;
      int data;
@@ -76,5 +96,7 @@ int main(){
     }else {
         printf("Loop not exists\n");
     }
+    int start = find_start(head);
+    printf("Loop start from: %d\n",start);
     return 0;
 }
