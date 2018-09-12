@@ -1,89 +1,116 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-typedef struct node{
-    int data;
-    struct node * next;
+typedef struct node {
+  int data;
+  struct node *link;
 } node;
 
-node* createNewNode(){
-    node *nn = (node*) malloc(sizeof(node));
-    return nn;
+node *create_new_node() {
+  node *nn = (node *)malloc(sizeof(node));
+  return nn;
 }
 
-void push(node **h, int d) {
-    node *nn = createNewNode();
-    nn->data = d;
-    nn->next = NULL;
-    if(*h == NULL) {
-        *h = nn;
-    } else {
-        node *curr = *h;
-        while(curr->next) {
-            curr = curr->next;
-        }
-        curr->next = nn;
-    }
+void push(node **h, int data) {
+  node *nn = create_new_node();
+  nn->data = data;
+  nn->link = NULL;
+
+  if (*h == NULL) {
+    *h = nn;
+  } else {
+    node *curr = *h;
+    while (curr->link)
+      curr = curr->link;
+    curr->link = nn;
+  }
 }
 
-void print_list(node* head){
-    node *cursor = head;
-    while(cursor) {
-        printf("%d\n", cursor->data);
-        cursor= cursor->next;
-    }
+void print_ll(node *h) {
+  node *curr = h;
+  while (curr) {
+    printf("%d\t", curr->data);
+    curr = curr->link;
+  }
 }
 
-void reverse(node** head) {
-    node* prev = NULL;
-    node* current = *head;
-    node* next;
-    while(current != NULL) {
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
-    }
-    *head = prev;
+void reverse(node **h) {
+  node *curr = *h;
+  node *prev = NULL;
+  node *next;
+
+  while (curr) {
+    next = curr->link;
+    curr->link = prev;
+    prev = curr;
+    curr = next;
+  }
+  *h = prev;
 }
 
-void is_palindrome(node** head) {
-    node* fast = *head, *slow = *head;
-    while(fast && fast->next) {
-        slow = slow->next;
-        fast = fast->next->next;
+int compare_ll(node *first, node *second) {
+  node *curr1 = first, *curr2 = second;
+  while (curr1 && curr2) {
+    if (curr1->data != curr2->data) {
+      return 0;
     }
-    int flag = 1;
-    node* mid;
-    mid = slow;
-    reverse(&(mid->next));
-    // print_list(*head);
-    fast = *head;
-    slow = mid->next;
-    while (flag == 1 && slow) {
-        if(fast->data != slow->data) {
-            flag = 0;
-        }
-        slow = slow->next;
-        fast = fast->next;
-    }
-    reverse(&(mid->next));
-    if(flag==0) {
-        printf("Linked List is not palindrome");
-    }else {
-        printf("Linked List is palindrome");
-    }
-}
 
-int main(){
-     node* head = NULL;
-     int data;
-     for(int i=1;i<=7; i++) {
-        push(&head,i);
-     }
-    for(int i=5;i>=1; i--) {
-        push(&head,i);
-     }
-    is_palindrome(&head);
+    curr1 = curr1->link;
+    curr2 = curr2->link;
+  }
+
+  if (curr1 == NULL && curr2 == NULL)
+    return 1;
+  else
     return 0;
+}
+
+int check_palindrome(node *h) {
+  node *fast = h, *slow = h;
+  node *prev_of_slow, *second_half;
+  // node *mid;
+  int res = 1;
+  if (h != NULL && h->link != NULL) {
+    while (fast && fast->link) {
+      fast = fast->link->link;
+      prev_of_slow = slow;
+      slow = slow->link;
+    }
+
+    if (fast) {
+      // mid = slow;
+      slow = slow->link;
+    }
+
+    second_half = slow;
+    prev_of_slow->link = NULL;
+    reverse(&second_half);
+    res = compare_ll(h, second_half);
+  }
+  return res;
+}
+
+int main() {
+  node *head = NULL;
+  printf("Enter no of nodes: ");
+  int n;
+  scanf("%d", &n);
+  printf("Enter data: ");
+  for (int i = 0; i < n; i++) {
+    int d;
+    scanf("%d", &d);
+    push(&head, d);
+  }
+  // printf("Linked List before reverse:\n");
+  // print_ll(head);
+  reverse(&head);
+  // printf("Linked List after reverse:\n");
+  // print_ll(head);
+
+  if (check_palindrome(head)) {
+    printf("Linked List is palindrome.");
+  } else {
+    printf("Linked List is not palindrome.");
+  }
+  return 0;
 }
