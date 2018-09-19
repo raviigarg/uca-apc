@@ -81,9 +81,11 @@ void preorder_traversal(BTree *root) {
 
 void post_order_traversal(BTree *root) {
   stack<BTree *> st;
-  /*
+
   if (root == NULL)
     return;
+
+  // using one stack
 
   do {
     while (root != NULL) {
@@ -95,6 +97,8 @@ void post_order_traversal(BTree *root) {
 
     root = st.top();
     st.pop();
+    if (st.empty())
+      break;
     if (root->right != NULL && st.top() == root->right) {
       st.pop();
       st.push(root);
@@ -104,28 +108,32 @@ void post_order_traversal(BTree *root) {
       root = NULL;
     }
   } while (!st.empty());
-  */
 
-  st.push(root);
+  cout << root->data;
 
-  stack<int> out;
+  // using two stacks
 
-  while (!st.empty()) {
-    BTree *curr = st.top();
-    st.pop();
-    out.push(curr->data);
+  /*
+    st.push(root);
 
-    if (curr->left)
-      st.push(curr->left);
+    stack<int> out;
 
-    if (curr->right)
-      st.push(curr->right);
-  }
+    while (!st.empty()) {
+      BTree *curr = st.top();
+      st.pop();
+      out.push(curr->data);
 
-  while (!out.empty()) {
-    cout << out.top() << " ";
-    out.pop();
-  }
+      if (curr->left)
+        st.push(curr->left);
+
+      if (curr->right)
+        st.push(curr->right);
+    }
+
+    while (!out.empty()) {
+      cout << out.top() << " ";
+      out.pop();
+    } */
 }
 
 int main() {
