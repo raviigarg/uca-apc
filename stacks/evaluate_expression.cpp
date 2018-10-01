@@ -22,7 +22,7 @@ int evaluate_expression(vector<string> &exp) {
         st.push(second * first);
       else if (exp[i] == "/")
         st.push(second / first);
-    } else
+    } else,t
       st.push(atoi(exp[i].c_str()));
   }
 
